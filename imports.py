@@ -2,6 +2,7 @@ import os
 import io
 import psutil
 import inspect
+import requests
 import textwarp
 import textwrap
 import traceback

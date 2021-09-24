@@ -4,15 +4,14 @@ from utils import default
 
 intents = discord.Intents.all()
 intents.members = True
-senarc = commands.Bot(command_prefix="s!", slash_interactions=True, intents=intents)
+bot = commands.Bot(command_prefix="s!", slash_interactions=True, intents=intents)
 config = default.get("./config.json")
 
-@senarc.event
+@bot.event
 async def on_ready():
     print("Bot initialized")
 
-@senarc.command(name='e', hidden=True, aliases=["eval"])
-@commands.is_owner()
+@bot.command(name='e', hidden=True, aliases=["eval"])
 async def _e(ctx, *, body=None):
 	if ctx.author.id not in config.dev_ids:
 		return await ctx.send(f"{config.forbidden} **`ERROR 401`**")
@@ -74,7 +73,7 @@ async def _e(ctx, *, body=None):
 							break
 						await ctx.send(f'```py\n{page}\n```')
 		else:
-			senarc._last_result = ret
+			bot._last_result = ret
 			try:
 				out = await ctx.send(f'```py\n{value}{ret}\n```')
 			except:
@@ -103,29 +102,29 @@ def get_syntax_error(e):
 		return f'```py\n{e.__class__.__name__}: {e}\n```'
 	return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
 
-@senarc.command(hidden=True)
+@bot.command(hidden=True)
 @commands.is_owner()
 async def load(ctx, *, name: str):
 	try:
-		senarc.load_extension(f"cogs.{name}")
+		bot.load_extension(f"cogs.{name}")
 	except Exception as e:
 		return await ctx.send(default.traceback_maker(e))
 	await ctx.send(f'"**{name}**" Cog loaded')
 
 # Unload Cog
 
-@senarc.command(hidden=True)
+@bot.command(hidden=True)
 @commands.is_owner()
 async def unload(ctx, *, name: str):
 	try:
-		senarc.unload_extension(f"cogs.{name}")
+		bot.unload_extension(f"cogs.{name}")
 	except Exception as e:
 		return await ctx.send(default.traceback_maker(e))
 	await ctx.send(f'"**{name}**" Cog unloaded')
 
 # Reload Cog
 
-@senarc.command(hidden=True)
+@bot.command(hidden=True)
 @commands.is_owner()
 async def reload(ctx, *, name: str):
 	if name == "all":
@@ -133,31 +132,31 @@ async def reload(ctx, *, name: str):
 		for file in os.listdir("./cogs"):
 			if file.endswith(".py"):
 				name = file[:-3]
-				senarc.reload_extension(f"cogs.{name}")
+				bot.reload_extension(f"cogs.{name}")
 	try:
-		senarc.reload_extension(f"cogs.{name}")
+		bot.reload_extension(f"cogs.{name}")
 	except Exception as e:
 		return await ctx.send(default.traceback_maker(e))
 	await ctx.send(f'Cog "**`{name}`**" has been reloaded.')
 
-@senarc.command(hidden=True)
+@bot.command(hidden=True)
 @commands.is_owner()
 async def restart(ctx):
 	await ctx.send(f"{config.success} Performing Complete Restart on Numix.")
 	os.system("ls -l; python3 main.py")
-	await senarc.logout()
+	await bot.logout()
 
 def run():
 	for file in os.listdir("./cogs"):
 		try:
 			if file.endswith(".py"):
 				name = file[:-3]
-				senarc.load_extension(f"cogs.{name}")
+				bot.load_extension(f"cogs.{name}")
 		except Exception as e:
 			print(e)
-	senarc.load_extension("jishaku")
+	bot.load_extension("jishaku")
 	try:
-		senarc.run(utils.get_env("TOKEN"), reconnect=True)
+		bot.run(utils.get_env("TOKEN"), reconnect=True)
 	except Exception as e:
 		print(e)
 
