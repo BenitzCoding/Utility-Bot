@@ -10,7 +10,7 @@ class Training(commands.Cog):
 	@commands.command(command_message=False, guild_whitelist=[886543799843688498], slash_interaction=True, brief="Create the correct moderation action for the training.")
 	@commands.has_permissions(administrator=True)
 	async def modaction(self, ctx, action):
-		if action.lower() == ("mute", "warn", "ban"):
+		if action.lower() == "mute" or action.lower() == "warn" or action.lower() == "ban":
 			self.actions.append(action.lower())
 			await ctx.send(f"{self.config.success} Added \"{action}\" to possible moderation actions.", ephemeral=True)
 
@@ -45,7 +45,7 @@ class Training(commands.Cog):
 
 	@commands.command(slash_interaction=True, guild_whitelist=[886543799843688498], brief="Warns a user in training.")
 	async def ban(self, ctx, user, *, message=None):
-		if "warn" not in self.actions:
+		if "ban" not in self.actions:
 			self.strikes.append("Wrong moderation action.")
 			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
 
