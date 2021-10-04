@@ -3,6 +3,7 @@ from imports import *
 class Training(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
+		self.config = default.get("./config.json")
 		self.actions = []
 		self.strikes = []
 
