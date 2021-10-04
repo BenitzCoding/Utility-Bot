@@ -1,17 +1,37 @@
 from imports import *
 from utils import utils
 from utils import default
+import aiohttp
+import sys
 
 intents = discord.Intents.all()
-intents.members = True
-bot = commands.Bot(command_prefix="s!", slash_interactions=True, intents=intents)
+#intents.members = True
+
+class Senarc(commands.Bot):
+  def __init__(self, *args, **kwargs):
+      super().__init__(*args, **kwargs)
+
+  async def start(self,*args, **kwargs):
+
+    self.session = aiohttp.ClientSession()
+    #doesn't intefer with the main bot's session as the bot uses http_session
+    await super().start(*args, **kwargs)
+    #super calls the discord.py start method of commands.Bot so just like bot.start which is called in bot.run.
+
+  async def close(self):
+    await self.session.close()
+    await super().close()
+    #closes aiohttp session
+
+bot = Senarc(command_prefix="s!", intents=intents)
+
 config = default.get("./config.json")
 
 @bot.event
 async def on_ready():
     print("Bot initialized")
 
-@bot.command(name='e', hidden=True, aliases=["eval"])
+@bot.command(slash_interaction=True, name='e', aliases=["eval"])
 async def _e(ctx, *, body=None):
 	if ctx.author.id not in config.dev_ids:
 		return await ctx.send(f"{config.forbidden} **`ERROR 401`**")
@@ -139,12 +159,19 @@ async def reload(ctx, *, name: str):
 		return await ctx.send(default.traceback_maker(e))
 	await ctx.send(f'Cog "**`{name}`**" has been reloaded.')
 
-@bot.command(hidden=True)
+@bot.command(slash_interaction=True)
 @commands.is_owner()
 async def restart(ctx):
-	await ctx.send(f"{config.success} Performing Complete Restart on Numix.")
+	await ctx.send(f"{config.success} Performing Complete Restart on Senarc Utilities.")
 	os.system("ls -l; python3 main.py")
 	await bot.logout()
+
+@bot.command(slash_interaction=True)
+@commands.is_owner()
+async def fetch(ctx):
+	os.system("ls -l; git pull Senarc main")
+	os.system("ls -l; python3 index.py")
+	sys.exit()
 
 def run():
 	for file in os.listdir("./cogs"):
@@ -152,6 +179,7 @@ def run():
 			if file.endswith(".py"):
 				name = file[:-3]
 				bot.load_extension(f"cogs.{name}")
+				print(f"\"{name.capitalize()}\" cog loaded.")
 		except Exception as e:
 			print(e)
 	bot.load_extension("jishaku")

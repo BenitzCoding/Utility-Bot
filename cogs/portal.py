@@ -3,88 +3,276 @@ from utils import utils
 
 class Portal(commands.Cog):
 	def __init__(self, bot):
-		print("\"Portal\" cog loaded.")
 		self.bot = bot
 		self.config = default.get("./config.json")
 
 	async def distribute_message(self, message, server):
 		if server == "Senarc":
-			orion = discord.utils.get(self.bot.channels, int(utils.get_env("ORION_SC_ID")))
-			orion_webhook = discord.utils.get(orion, name="Senarc Network Integration")
-			mittens = discord.utils.get(self.bot.channels, int(utils.get_env("MITTENS_SC_ID")))
-			mittens_webhook = discord.utils.get(mittens, name="Senarc Network Integration")
-			secure = discord.utils.get(self.bot.channels, int(utils.get_env("SECURE_SC_ID")))
-			secure_webhook = discord.utils.get(secure, name="Senarc Network Integration")
-			mta = discord.utils.get(self.bot.channels, int(utils.get_env("MTA_SC_ID")))
-			mta_webhook = discord.utils.get(mta, name="Senarc Network Integration")
+			
+			senarc_srv = discord.utils.get(self.bot.guilds, id=886543799843688498)
+			orion_srv = discord.utils.get(self.bot.guilds, id=881095332434440224)
+			mta_srv = discord.utils.get(self.bot.guilds, id=849907771871854631)
+			secure_srv = discord.utils.get(self.bot.guilds, id=864451138514452481)
+			mittens_srv = discord.utils.get(self.bot.guilds, id=780278916173791232)
 
-			await orion_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await mittens_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await secure_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await mta_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
+			for channel in orion_srv.text_channels:
+				if channel.id == int(utils.get_env("ORION_SC_ID")):
+					orion = channel
+					orion_webhook = discord.utils.get(await orion.webhooks(), name="Senarc Network Integration")
+					await orion_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in mittens_srv.text_channels:
+				if channel.id == int(utils.get_env("MITTENS_SC_ID")):
+					mittens = channel
+					mittens_webhook = discord.utils.get(await mittens.webhooks(), name="Senarc Network Integration")
+					await mittens_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+
+			for channel in mta_srv.text_channels:
+				if channel.id == int(utils.get_env("MTA_SC_ID")):
+					mta = channel
+					mta_webhook = discord.utils.get(await mta.webhooks(), name="Senarc Network Integration")
+					await mta_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in secure_srv.text_channels:
+				if channel.id == int(utils.get_env("SECURE_SC_ID")):
+					secure = channel
+					secure_webhook = discord.utils.get(await secure.webhooks(), name="Senarc Network Integration")
+					await secure_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in orion_srv.text_channels:
+				if channel.id == int(utils.get_env("MITTENS_SC_ID")):
+					mittens = channel
+					mittens_webhook = discord.utils.get(await mittens.webhooks(), name="Senarc Network Integration")
+					await mittens_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
 
 		if server == "Orion":
-			senarc = discord.utils.get(self.bot.channels, int(utils.get_env("SENARC_SC_ID")))
-			senarc_webhook = discord.utils.get(senarc, name="Senarc Network Integration")
-			mittens = discord.utils.get(self.bot.channels, int(utils.get_env("MITTENS_SC_ID")))
-			mittens_webhook = discord.utils.get(mittens, name="Senarc Network Integration")
-			secure = discord.utils.get(self.bot.channels, int(utils.get_env("SECURE_SC_ID")))
-			secure_webhook = discord.utils.get(secure, name="Senarc Network Integration")
-			mta = discord.utils.get(self.bot.channels, int(utils.get_env("MTA_SC_ID")))
-			mta_webhook = discord.utils.get(mta, name="Senarc Network Integration")
 
-			await senarc_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await mittens_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await secure_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await mta_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
+			senarc_srv = discord.utils.get(self.bot.guilds, id=886543799843688498)
+			mta_srv = discord.utils.get(self.bot.guilds, id=849907771871854631)
+			secure_srv = discord.utils.get(self.bot.guilds, id=864451138514452481)
+			mittens_srv = discord.utils.get(self.bot.guilds, id=780278916173791232)
+
+
+			for channel in mta_srv.text_channels:
+				if channel.id == int(utils.get_env("MTA_SC_ID")):
+					mta = channel
+					mta_webhook = discord.utils.get(await mta.webhooks(), name="Senarc Network Integration")
+					await mta_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in mittens_srv.text_channels:
+				if channel.id == int(utils.get_env("MITTENS_SC_ID")):
+					mittens = channel
+					mittens_webhook = discord.utils.get(await mittens.webhooks(), name="Senarc Network Integration")
+					await mittens_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+
+			for channel in secure_srv.text_channels:
+				if channel.id == int(utils.get_env("SECURE_SC_ID")):
+					secure = channel
+					secure_webhook = discord.utils.get(await secure.webhooks(), name="Senarc Network Integration")
+					await secure_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in senarc_srv.text_channels:
+				if channel.id == int(utils.get_env("SENARC_SC_ID")):
+					senarc = channel
+					senarc_webhook = discord.utils.get(await senarc.webhooks(), name="Senarc Network Integration")
+					await senarc_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
 
 		if server == "Mittens":
-			orion = discord.utils.get(self.bot.channels, int(utils.get_env("ORION_SC_ID")))
-			orion_webhook = discord.utils.get(orion, name="Senarc Network Integration")
-			senarc = discord.utils.get(self.bot.channels, int(utils.get_env("SENARC_SC_ID")))
-			senarc_webhook = discord.utils.get(senarc, name="Senarc Network Integration")
-			secure = discord.utils.get(self.bot.channels, int(utils.get_env("SECURE_SC_ID")))
-			secure_webhook = discord.utils.get(secure, name="Senarc Network Integration")
-			mta = discord.utils.get(self.bot.channels, int(utils.get_env("MTA_SC_ID")))
-			mta_webhook = discord.utils.get(mta, name="Senarc Network Integration")
 
-			await orion_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await senarc_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await secure_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await mta_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
+			senarc_srv = discord.utils.get(self.bot.guilds, id=886543799843688498)
+			orion_srv = discord.utils.get(self.bot.guilds, id=881095332434440224)
+			mta_srv = discord.utils.get(self.bot.guilds, id=849907771871854631)
+			secure_srv = discord.utils.get(self.bot.guilds, id=864451138514452481)
+			mittens_srv = discord.utils.get(self.bot.guilds, id=780278916173791232)
+
+			for channel in orion_srv.text_channels:
+				if channel.id == int(utils.get_env("ORION_SC_ID")):
+					orion = channel
+					orion_webhook = discord.utils.get(await orion.webhooks(), name="Senarc Network Integration")
+					await orion_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in mta_srv.text_channels:
+				if channel.id == int(utils.get_env("MTA_SC_ID")):
+					mta = channel
+					mta_webhook = discord.utils.get(await mta.webhooks(), name="Senarc Network Integration")
+					await mta_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in secure_srv.text_channels:
+				if channel.id == int(utils.get_env("SECURE_SC_ID")):
+					secure = channel
+					secure_webhook = discord.utils.get(await secure.webhooks(), name="Senarc Network Integration")
+					await secure_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in senarc_srv.text_channels:
+				if channel.id == int(utils.get_env("SENARC_SC_ID")):
+					senarc = channel
+					senarc_webhook = discord.utils.get(await senarc.webhooks(), name="Senarc Network Integration")
+					await senarc_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
 
 		if server == "Secure":
-			orion = discord.utils.get(self.bot.channels, int(utils.get_env("ORION_SC_ID")))
-			orion_webhook = discord.utils.get(orion, name="Senarc Network Integration")
-			mittens = discord.utils.get(self.bot.channels, int(utils.get_env("MITTENS_SC_ID")))
-			mittens_webhook = discord.utils.get(mittens, name="Senarc Network Integration")
-			senarc = discord.utils.get(self.bot.channels, int(utils.get_env("SENARC_SC_ID")))
-			senarc_webhook = discord.utils.get(senarc, name="Senarc Network Integration")
-			mta = discord.utils.get(self.bot.channels, int(utils.get_env("MTA_SC_ID")))
-			mta_webhook = discord.utils.get(mta, name="Senarc Network Integration")
 
-			await orion_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await mittens_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await senarc_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await mta_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
+			senarc_srv = discord.utils.get(self.bot.guilds, id=886543799843688498)
+			orion_srv = discord.utils.get(self.bot.guilds, id=881095332434440224)
+			mta_srv = discord.utils.get(self.bot.guilds, id=849907771871854631)
+			secure_srv = discord.utils.get(self.bot.guilds, id=864451138514452481)
+			mittens_srv = discord.utils.get(self.bot.guilds, id=780278916173791232)
+
+			for channel in orion_srv.text_channels:
+				if channel.id == int(utils.get_env("ORION_SC_ID")):
+					orion = channel
+					orion_webhook = discord.utils.get(await orion.webhooks(), name="Senarc Network Integration")
+					await orion_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in mta_srv.text_channels:
+				if channel.id == int(utils.get_env("MTA_SC_ID")):
+					mta = channel
+					mta_webhook = discord.utils.get(await mta.webhooks(), name="Senarc Network Integration")
+					await mta_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in orion_srv.text_channels:
+				if channel.id == int(utils.get_env("MITTENS_SC_ID")):
+					mittens = channel
+					mittens_webhook = discord.utils.get(await mittens.webhooks(), name="Senarc Network Integration")
+					await mittens_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in mittens_srv.text_channels:
+				if channel.id == int(utils.get_env("MITTENS_SC_ID")):
+					mittens = channel
+					mittens_webhook = discord.utils.get(await mittens.webhooks(), name="Senarc Network Integration")
+					await mittens_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+
+			for channel in senarc_srv.text_channels:
+				if channel.id == int(utils.get_env("SENARC_SC_ID")):
+					senarc = channel
+					senarc_webhook = discord.utils.get(await senarc.webhooks(), name="Senarc Network Integration")
+					await senarc_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
 
 		if server == "MTA":
-			orion = discord.utils.get(self.bot.channels, int(utils.get_env("ORION_SC_ID")))
-			orion_webhook = discord.utils.get(orion, name="Senarc Network Integration")
-			mittens = discord.utils.get(self.bot.channels, int(utils.get_env("MITTENS_SC_ID")))
-			mittens_webhook = discord.utils.get(mittens, name="Senarc Network Integration")
-			secure = discord.utils.get(self.bot.channels, int(utils.get_env("SECURE_SC_ID")))
-			secure_webhook = discord.utils.get(secure, name="Senarc Network Integration")
-			senarc = discord.utils.get(self.bot.channels, int(utils.get_env("SENARC_SC_ID")))
-			senarc_webhook = discord.utils.get(senarc, name="Senarc Network Integration")
 
-			await orion_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await mittens_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await secure_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
-			await senarc_webhook.send(message, username=message.author.name, avatar_url=message.author.avatar_url)
+			senarc_srv = discord.utils.get(self.bot.guilds, id=886543799843688498)
+			orion_srv = discord.utils.get(self.bot.guilds, id=881095332434440224)
+			mta_srv = discord.utils.get(self.bot.guilds, id=849907771871854631)
+			secure_srv = discord.utils.get(self.bot.guilds, id=864451138514452481)
+			mittens_srv = discord.utils.get(self.bot.guilds, id=780278916173791232)
+
+			for channel in orion_srv.text_channels:
+				if channel.id == int(utils.get_env("ORION_SC_ID")):
+					orion = channel
+					orion_webhook = discord.utils.get(await orion.webhooks(), name="Senarc Network Integration")
+					await orion_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in secure_srv.text_channels:
+				if channel.id == int(utils.get_env("SECURE_SC_ID")):
+					secure = channel
+					secure_webhook = discord.utils.get(await secure.webhooks(), name="Senarc Network Integration")
+					await secure_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in mittens_srv.text_channels:
+				if channel.id == int(utils.get_env("MITTENS_SC_ID")):
+					mittens = channel
+					mittens_webhook = discord.utils.get(await mittens.webhooks(), name="Senarc Network Integration")
+					await mittens_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in orion_srv.text_channels:
+				if channel.id == int(utils.get_env("MITTENS_SC_ID")):
+					mittens = channel
+					mittens_webhook = discord.utils.get(await mittens.webhooks(), name="Senarc Network Integration")
+					await mittens_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
+
+			for channel in senarc_srv.text_channels:
+				if channel.id == int(utils.get_env("SENARC_SC_ID")):
+					senarc = channel
+					senarc_webhook = discord.utils.get(await senarc.webhooks(), name="Senarc Network Integration")
+					await senarc_webhook.send(message.content, username=message.author.name, avatar_url=message.author.display_avatar)
+					break
+				
+				else:
+					continue
 		
 	@commands.Cog.listener()
 	async def on_message(self, message):
+
+		if message.author.bot:
+			return
 
 		if message.channel.id == int(utils.get_env("SENARC_SC_ID")):
 			await self.distribute_message(message, "Senarc")
