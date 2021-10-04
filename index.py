@@ -170,6 +170,7 @@ async def restart(ctx):
 @commands.is_owner()
 async def fetch(ctx):
 	os.system("ls -l; git pull Senarc main")
+	await ctx.send(f"{config.success} Fetched Github updates, Restarting client now...")
 	os.system("ls -l; python3 index.py")
 	sys.exit()
 
