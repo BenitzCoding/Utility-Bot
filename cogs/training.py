@@ -4,7 +4,7 @@ class Training(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.actions = []
-		self.strikes = {}
+		self.strikes = []
 
 	@commands.command(command_message=False, guild_whitelist=[886543799843688498], slash_interaction=True, brief="Create the correct moderation action for the training.")
 	@commands.has_permissions(administrator=True)
