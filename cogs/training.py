@@ -19,42 +19,45 @@ class Training(commands.Cog):
 
 	@commands.command(slash_interaction=True, guild_whitelist=[886543799843688498], brief="Warns a user in training.")
 	async def warn(self, ctx, user, *, message=None):
-		if "warn" not in self.actions:
-			self.strikes.append("Wrong moderation action.")
-			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
+		if "warn" in self.actions:
+			await ctx.send(f"{self.config.success} Warned {user} for `{message}`")
+			self.actions.pop("warn")
 
 		elif message == None:
-			self.strikes.insert({ "id" "reason": "No valid reasoning."})
+			self.strikes.append("No valid reasoning.")
 			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
 
 		else:
-			await ctx.send(f"{self.config.success} Warned {user} for `{message}`")
+			self.strikes.append("Wrong moderation action.")
+			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
 
 	@commands.command(slash_interaction=True, guild_whitelist=[886543799843688498], brief="Mute a user in training.")
 	async def mute(self, ctx, user, *, message=None):
-		if "mute" not in self.actions:
-			self.strikes.append("Wrong moderation action.")
-			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
+		if "mute" in self.actions:
+			await ctx.send(f"{self.config.success} Muted {user} for `{message}`")
+			self.actions.pop("mute")
 
 		elif message == None:
 			self.strikes.append("No valid reasoning.")
 			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
 
 		else:
-			await ctx.send(f"{self.config.success} Muted {user} for `{message}`")
+			self.strikes.append("Wrong moderation action.")
+			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
 
 	@commands.command(slash_interaction=True, guild_whitelist=[886543799843688498], brief="Warns a user in training.")
 	async def ban(self, ctx, user, *, message=None):
-		if "ban" not in self.actions:
-			self.strikes.append("Wrong moderation action.")
-			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
+		if "ban" in self.actions:
+			await ctx.send(f"{self.config.success} Banned {user} for `{message}`")
+			self.actions.pop("ban")
 
 		elif message == None:
 			self.strikes.append("No valid reasoning.")
 			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
 
 		else:
-			await ctx.send(f"{self.config.success} Banned {user} for `{message}`")
+			self.strikes.append("Wrong moderation action.")
+			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
 
 	@commands.command(slash_interaction=True, guild_whitelist=[886543799843688498], brief="Shows the user's strikes.")
 	async def strikes(self, ctx):
