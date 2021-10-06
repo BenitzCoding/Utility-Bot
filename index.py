@@ -23,7 +23,7 @@ class Senarc(commands.Bot):
     await super().close()
     #closes aiohttp session
 
-bot = Senarc(command_prefix="s!", intents=intents)
+bot = Senarc(command_prefix="s!", slash_interactions=True, intents=intents)
 
 config = default.get("./config.json")
 
@@ -34,7 +34,7 @@ async def on_ready():
 @bot.command(slash_interaction=True, name='e', aliases=["eval"])
 async def _e(ctx, *, body=None):
 	if ctx.author.id not in config.dev_ids:
-		return await ctx.send(f"{config.forbidden} **`ERROR 401`**")
+		return await ctx.send(f"**`ERROR 401`**")
 	env = {
 		'ctx': ctx,
 		'channel': ctx.channel,
