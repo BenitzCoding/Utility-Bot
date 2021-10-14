@@ -3,6 +3,7 @@ from utils import utils
 from utils import default
 import aiohttp
 import sys
+from jishaku.flags import Flags
 
 intents = discord.Intents.all()
 #intents.members = True
@@ -184,6 +185,7 @@ def run():
 		except Exception as e:
 			print(e)
 	bot.load_extension("jishaku")
+	Flags.HIDE = True
 	try:
 		bot.run(utils.get_env("TOKEN"), reconnect=True)
 	except Exception as e:

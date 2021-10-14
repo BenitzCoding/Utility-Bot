@@ -15,7 +15,7 @@ class Training(commands.Cog):
 			await ctx.send(f"{self.config.success} Added \"{action}\" to possible moderation actions.", ephemeral=True)
 
 		else:
-			await ctx.send(f"{self.config.forbidden} That is not a valid moderation action.")
+			await ctx.send(f"{self.config.forbidden} That is not a valid moderation action.", ephemeral=True)
 
 	@commands.command(slash_interaction=True, guild_whitelist=[886543799843688498], brief="Warns a user in training.")
 	async def warn(self, ctx, user, *, message=None):
