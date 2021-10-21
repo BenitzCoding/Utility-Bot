@@ -184,7 +184,10 @@ def run():
 				print(f"\"{name.capitalize()}\" cog loaded.")
 		except Exception as e:
 			print(e)
-	bot.load_extension("jishaku")
+	try:
+		bot.load_extension("jishaku")
+	except Exception as e:
+		print(e)
 	Flags.HIDE = True
 	try:
 		bot.run(utils.get_env("TOKEN"), reconnect=True)
