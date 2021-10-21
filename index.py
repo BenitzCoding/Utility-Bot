@@ -185,7 +185,8 @@ def run():
 		except Exception as e:
 			print(e)
 	try:
-		bot.load_extension("jishaku")
+		# bot.load_extension("jishaku")
+		null = None
 	except Exception as e:
 		print(e)
 	Flags.HIDE = True
