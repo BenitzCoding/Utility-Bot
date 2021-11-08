@@ -1,6 +1,6 @@
 from imports import *
-from utils.utils import get_env
-from utils.default import get
+from .utils.utils import get_env
+from .utils.default import get
 
 class Portal(commands.Cog):
 	def __init__(self, bot):
