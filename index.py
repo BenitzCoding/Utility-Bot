@@ -1,5 +1,5 @@
 from imports import *
-from .utils import default, utils
+from .utils.utils import get_env
 import aiohttp
 import sys
 from jishaku.flags import Flags
@@ -190,7 +190,7 @@ def run():
 		print(e)
 	Flags.HIDE = True
 	try:
-		bot.run(utils.get_env("TOKEN"), reconnect=True)
+		bot.run(get_env("TOKEN"), reconnect=True)
 	except Exception as e:
 		print(e)
 

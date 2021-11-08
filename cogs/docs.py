@@ -6,16 +6,16 @@ class Docs(commands.Cog):
     self.bot = bot
 
     self.bot.loop.create_task(self.__ainit__())
-  
+
   async def __ainit__(self):
     await self.bot.wait_until_ready()
     self.scraper = AsyncScraper(session = self.bot.session)
 
   async def rtfm_lookup(self, program = None, *, args = None):
-    
+
     rtfm_dictionary = {
-		"orion.py": "https://orion.senarc.org/en/master/",
-        "development" : "https://orion.senarc.org/en/development/"
+		"fusion.py": "https://fusion.senarc.org/en/master/",
+        "development" : "https://fusion.senarc.org/en/development/"
     }
 
     if not args:
@@ -34,7 +34,7 @@ class Docs(commands.Cog):
 
   def reference(self, message):
     reference = message.reference
-    
+
     if reference and isinstance(reference.resolved, discord.Message):
 	    return reference.resolved.to_reference()
 
@@ -45,7 +45,7 @@ class Docs(commands.Cog):
     if isinstance(results, str):
       await ctx.send(results, allowed_mentions = discord.AllowedMentions.none())
 
-    else: 
+    else:
       embed = discord.Embed(color = random.randint(0, 16777215))
 
       results = results[:10]
@@ -53,14 +53,14 @@ class Docs(commands.Cog):
 
       reference = self.reference(ctx.message)
       await ctx.send(embed=embed, reference = reference)
-    
+
   @commands.group(slash_interaction=True, aliases=["rtd", "rtfs"], brief="Search for attributes from docs.")
   async def rtfm(self, ctx, *, args = None):
 
     await ctx.trigger_typing()
-    results = await self.rtfm_lookup(program = "orion.py", args = args)
+    results = await self.rtfm_lookup(program = "fusion.py", args = args)
     await self.rtfm_send(ctx, results)
-  
+
   @rtfm.command(slash_interaction=True, brief = "a command using doc_search to look up at development's docs")
   async def development(self, ctx, *, args = None):
 

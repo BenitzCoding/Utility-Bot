@@ -1,10 +1,11 @@
 from imports import *
-from .utils import utils
+from utils.utils import get_env
+from utils.default import get
 
 class Portal(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.config = default.get("./config.json")
+		self.config = get("./config.json")
 
 	async def distribute_message(self, message, server):
 		if server == "Senarc":

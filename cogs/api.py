@@ -1,9 +1,10 @@
 from imports import *
+from utils.default import get
 
 class API_Commands(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.config = default.get("./config.json")
+		self.config = get("./config.json")
 
 	@commands.command(description="Finds a MTA Certificate.", aliases=["cert", "mta", "mod-cert"])
 	async def certificate(self, ctx, method=None, token=None):
@@ -94,7 +95,7 @@ class API_Commands(commands.Cog):
 					return await ctx.send(embed=embed)
 			except:
 				return await ctx.send(f"{self.config.forbidden} The API is currently Down.", ephemeral=True)
-			
+
 		else:
 			await ctx.send(f"{self.config.forbidden} Invalid validation method.", ephemeral=True)
 
