@@ -190,7 +190,7 @@ def run():
 		print(e)
 	Flags.HIDE = True
 	try:
-		bot.run(get_env("TOKEN"), reconnect=True)
+		bot.run(utils.get_env("TOKEN"), reconnect=True)
 	except Exception as e:
 		print(e)
 

@@ -1,10 +1,10 @@
 from imports import *
-from utils.default import get
+from utils import default
 
 class Developers(commands.Cog):
     def __init__(self, senarc):
         self.senarc = senarc
-        self.config = get("./config.json")
+        self.config = default.get("./config.json")
 
     """Not Complete"""
 

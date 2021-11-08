@@ -1,10 +1,10 @@
 from imports import *
-from utils.default import get
+from utils import default
 
 class API_Commands(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.config = get("./config.json")
+		self.config = default.get("./config.json")
 
 	@commands.command(description="Finds a MTA Certificate.", aliases=["cert", "mta", "mod-cert"])
 	async def certificate(self, ctx, method=None, token=None):

@@ -1,10 +1,10 @@
 from imports import *
-from utils import utils
+from utils import utils, default
 
 class Portal(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.config = get("./config.json")
+		self.config = default.get("./config.json")
 
 	async def distribute_message(self, message, server):
 		if server == "Senarc":
