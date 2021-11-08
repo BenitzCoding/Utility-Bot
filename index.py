@@ -1,6 +1,5 @@
 from imports import *
-from utils import utils
-from utils import default
+from .utils import default, utils
 import aiohttp
 import sys
 from jishaku.flags import Flags
