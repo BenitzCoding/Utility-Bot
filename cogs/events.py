@@ -1,5 +1,5 @@
 from imports import *
-from utils import default
+from utilities import default
 
 class Events(commands.Cog):
     def __init__(self, senarc):

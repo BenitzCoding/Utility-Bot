@@ -1,5 +1,5 @@
 from imports import *
-from utils.default import get
+from utilities.default import get
 
 class Training(commands.Cog):
 	def __init__(self, bot):
