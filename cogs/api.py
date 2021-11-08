@@ -1,5 +1,5 @@
 from imports import *
-from .utils.default import get
+from utils.default import get
 
 class API_Commands(commands.Cog):
 	def __init__(self, bot):

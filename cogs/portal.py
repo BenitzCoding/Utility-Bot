@@ -1,5 +1,5 @@
 from imports import *
-from .utils import utils
+from utils import utils
 
 class Portal(commands.Cog):
 	def __init__(self, bot):
