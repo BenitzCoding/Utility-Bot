@@ -17,7 +17,7 @@ class Events(commands.Cog):
 
 	@commands.Cog.listener('on_message')
 	async def chrismas_special(self, message):
-		if message.guild == None and message.lower() == "confirm":
+		if message.guild == None and message.content.lower() == "confirm":
 			data = {
 				"id": message.author.id,
 				"type": "Confirmed",
@@ -31,7 +31,7 @@ class Events(commands.Cog):
 			else:
 				return await message.author.send("Marked as `confirmed`!")
 
-		elif message.guild == None and message.lower() == "cancel":
+		elif message.guild == None and message.content.lower() == "cancel":
 			data = {
 				"id": message.author.id,
 				"type": "Cancelled",
