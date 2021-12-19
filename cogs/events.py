@@ -1,5 +1,6 @@
 import cool_utils
 import discord
+import os
 from imports import *
 from utilities import default
 from pymongo import MongoClient
@@ -37,7 +38,7 @@ class Events(commands.Cog):
 
     @commands.Cog.listener('on_message')
     async def chrismas_special(self, message):
-        if message.guild == None and message.author == self.senarc.me:
+        if message.guild == None and message.author == self.senarc.user:
             view = Buttons()
             await message.edit(view=view)
             await view.wait()
@@ -45,11 +46,11 @@ class Events(commands.Cog):
                 return await message.author.send("Request timmed out, please re-submit the request.")
 
             if view.value:
-                requests.post("https://api.senarc.org/confirm-contest", json={ "id": message.author.id, "type": "Confirmed", "auth": self.config.auth })
+                requests.post("https://api.senarc.org/confirm-contest", json={ "id": message.author.id, "type": "Confirmed", "auth": os.getenv("auth") })
                 return
             
             else:
-                requests.post("https://api.senarc.org/confirm-contest", json={ "id": message.author.id, "type": "Cancelled", "auth": self.config.auth })
+                requests.post("https://api.senarc.org/confirm-contest", json={ "id": message.author.id, "type": "Cancelled", "auth": os.getenv("auth") })
                 return
 
 def setup(bot):
