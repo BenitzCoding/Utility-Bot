@@ -14,9 +14,7 @@ class Senarc(commands.Bot):
   async def start(self,*args, **kwargs):
 
     self.session = aiohttp.ClientSession()
-    #doesn't intefer with the main bot's session as the bot uses http_session
     await super().start(*args, **kwargs)
-    #super calls the discord.py start method of commands.Bot so just like bot.start which is called in bot.run.
 
   async def close(self):
     await self.session.close()
