@@ -23,7 +23,7 @@ class Events(commands.Cog):
 			return
 		channel = discord.utils.get(member.guild.channels, id=886543799843688501)
 		embed = discord.Embed(timestamp=int(datetime.now().timestamp()), description="Have a nice stay at **Senarc**. You should read <#886752366962040843> before getting started!", colour=0x90B4F8)
-		embed.set_author(name=f"Welcome {member.name}!", icon_url=member.avatar_url)
+		embed.set_author(name=f"Welcome {member.name}!", icon_url=member.display_avatar)
 
 		member_count = len(member.guild.members)
 		if member_count.endswith("1"):
@@ -38,7 +38,7 @@ class Events(commands.Cog):
 		else:
 			member_count = member_count + "th"
 
-		embed.set_footer(text=f"You're the {member_count} member", icon_url=member.guild.icon_url)
+		embed.set_footer(text=f"You're the {member_count} member", icon_url=member.guild.icon)
 		await channel.send(embed=embed)
 
 def setup(bot):
