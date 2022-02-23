@@ -12,12 +12,9 @@ class Senarc(commands.Bot):
       super().__init__(*args, **kwargs)
 
   async def start(self,*args, **kwargs):
-
-    self.session = aiohttp.ClientSession()
     await super().start(*args, **kwargs)
 
   async def close(self):
-    await self.session.close()
     await super().close()
     #closes aiohttp session
 
