@@ -25,7 +25,7 @@ class Events(commands.Cog):
 		embed = discord.Embed(timestamp=int(datetime.now().timestamp()), description="Have a nice stay at **Senarc**. You should read <#886752366962040843> before getting started!", colour=0x90B4F8)
 		embed.set_author(name=f"Welcome {member.name}!", icon_url=member.display_avatar)
 
-		member_count = len(member.guild.members)
+		member_count = str(len(member.guild.members))
 		if member_count.endswith("1"):
 			member_count = member_count + "st"
 
