@@ -19,7 +19,7 @@ class Events(commands.Cog):
 	async def welcome_message(self, member):
 		if member.guild.id != 886543799843688498:
 			return
-		channel = await self.bot.fetch_channel(886543799843688501)
+		channel = await self.senarc.fetch_channel(886543799843688501)
 		embed = discord.Embed(timestamp=int(datetime.now().timestamp()), description="Have a nice stay at **Senarc**. You should read <#886752366962040843> before getting started!", colour=0x90B4F8)
 		embed.set_author(name=f"Welcome {member.name}!", icon_url=member.display_avatar)
 
