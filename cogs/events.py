@@ -8,8 +8,6 @@ from utilities import default
 from datetime import datetime
 from pymongo import MongoClient
 from discord.ext import commands
-from discord.ui import Button, button, View
-from discord import ButtonStyle, Interaction
 
 
 class Events(commands.Cog):
