@@ -15,7 +15,7 @@ class Events(commands.Cog):
 		self.senarc = senarc
 		self.config = default.get("./config.json")
 
-	@commands.listener('on_message')
+	@commands.Cog.listener('on_message')
 	async def welcome_message(self, member):
 		if member.guild.id != 886543799843688498:
 			return
