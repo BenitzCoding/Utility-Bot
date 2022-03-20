@@ -1,3 +1,5 @@
-orion
+enhanced-dpy
 psutil
 dnspython
+jishaku
+timeago
