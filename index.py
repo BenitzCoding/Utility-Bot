@@ -18,7 +18,7 @@ class Senarc(commands.Bot):
     await super().close()
     #closes aiohttp session
 
-bot = Senarc(command_prefix="s!", slash_interactions=True, intents=intents)
+bot = Senarc(command_prefix="s!", slash_commands=True, intents=intents)
 
 config = default.get("./config.json")
 
@@ -26,7 +26,7 @@ config = default.get("./config.json")
 async def on_ready():
     print("Bot initialized")
 
-@bot.command(slash_interaction=True, name='e', aliases=["eval"])
+@bot.command(slash_command=True, name='e', aliases=["eval"])
 async def _e(ctx, *, body=None):
 	if ctx.author.id not in config.dev_ids:
 		return await ctx.send(f"**`ERROR 401`**")
@@ -154,14 +154,14 @@ async def reload(ctx, *, name: str):
 		return await ctx.send(default.traceback_maker(e))
 	await ctx.send(f'Cog "**`{name}`**" has been reloaded.')
 
-@bot.command(slash_interaction=True)
+@bot.command(slash_command=True)
 @commands.is_owner()
 async def restart(ctx):
 	await ctx.send(f"{config.success} Performing Complete Restart on Senarc Utilities.")
 	os.system("ls -l; python3 main.py")
 	await bot.logout()
 
-@bot.command(slash_interaction=True)
+@bot.command(slash_command=True)
 @commands.is_owner()
 async def fetch(ctx):
 	os.system("ls -l; git pull")
