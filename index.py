@@ -1,13 +1,24 @@
-from imports import *
-from utilities import utils, default
-import aiohttp
+import os
+import io
 import sys
+
+import inspect
+import textwrap
+import traceback
+
+from contextlib import redirect_stdout
+
+from discord import Intents
+from discord.ext.commands import Bot
+
 from jishaku.flags import Flags
 
-intents = discord.Intents.all()
+from utilities import utils, default
+
+intents = Intents.all()
 #intents.members = True
 
-class Senarc(commands.Bot):
+class Senarc(Bot):
   def __init__(self, *args, **kwargs):
       super().__init__(*args, **kwargs)
 
