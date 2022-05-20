@@ -13,10 +13,10 @@ class Training(commands.Cog):
 	async def modaction(self, ctx, action):
 		if action.lower() == "mute" or action.lower() == "warn" or action.lower() == "ban":
 			self.actions.append(action.lower())
-			await ctx.send(f"{self.config.success} Added \"{action}\" to possible moderation actions.", ephemeral=True)
+			await ctx.send(f"{self.config.success} Added \"{action}\" to possible moderation actions.", ephemeral = True)
 
 		else:
-			await ctx.send(f"{self.config.forbidden} That is not a valid moderation action.", ephemeral=True)
+			await ctx.send(f"{self.config.forbidden} That is not a valid moderation action.", ephemeral = True)
 
 	@commands.command(slash_command=True, guild_whitelist=[886543799843688498], brief="Warns a user in training.")
 	async def warn(self, ctx, user, *, message=None):
