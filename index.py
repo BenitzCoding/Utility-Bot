@@ -16,18 +16,16 @@ from jishaku.flags import Flags
 from utilities import utils, default
 
 intents = Intents.all()
-#intents.members = True
 
 class Senarc(Bot):
-  def __init__(self, *args, **kwargs):
-      super().__init__(*args, **kwargs)
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
 
-  async def start(self,*args, **kwargs):
-    await super().start(*args, **kwargs)
+	async def start(self,*args, **kwargs):
+		await super().start(*args, **kwargs)
 
-  async def close(self):
-    await super().close()
-    #closes aiohttp session
+	async def close(self):
+		await super().close()
 
 bot = Senarc(command_prefix="s!", slash_commands=True, intents=intents)
 
