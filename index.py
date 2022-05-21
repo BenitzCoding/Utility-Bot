@@ -8,7 +8,7 @@ import traceback
 
 from contextlib import redirect_stdout
 
-from discord import Intents
+from discord import Intents, app_commands
 from discord.ext.commands import Bot
 
 from jishaku.flags import Flags
@@ -142,52 +142,70 @@ def get_syntax_error(e):
 		return f'```py\n{e.__class__.__name__}: {e}\n```'
 	return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
 
-@bot.tree.command(hidden=True)
-@commands.is_owner()
-async def load(ctx, *, name: str):
+@bot.tree.command(
+	name = "load",
+	description = "Loads a Cog extension."
+)
+@app_commands.describe(extension = "The extension you'd like to load.")
+@app_commands.guilds(CORE_GUILD)
+async def load(interaction, *, extension: str):
 	try:
-		bot.load_extension(f"cogs.{name}")
+		bot.load_extension(f"cogs.{extension}")
 	except Exception as e:
-		return await ctx.send(default.traceback_maker(e))
-	await ctx.send(f'"**{name}**" Cog loaded')
+		return await interaction.response.send_message(default.traceback_maker(e))
+	await interaction.response.send_message(f'"**{extension}**" Cog loaded')
 
 # Unload Cog
 
-@bot.tree.command(hidden=True)
-@commands.is_owner()
-async def unload(ctx, *, name: str):
+@bot.tree.command(
+	name = "unload",
+	description = "Unloads a Cog extension."
+)
+@app_commands.describe(extension = "The extension you'd like to unload.")
+@app_commands.guilds(CORE_GUILD)
+async def unload(interaction, *, extension: str):
 	try:
-		bot.unload_extension(f"cogs.{name}")
+		bot.unload_extension(f"cogs.{extension}")
 	except Exception as e:
-		return await ctx.send(default.traceback_maker(e))
-	await ctx.send(f'"**{name}**" Cog unloaded')
+		return await interaction.response.send_message(default.traceback_maker(e))
+	await interaction.response.send_message(f'"**{extension}**" Cog unloaded')
 
 # Reload Cog
 
-@bot.tree.command(hidden=True)
-@commands.is_owner()
-async def reload(ctx, *, name: str):
-	if name == "all":
-		await ctx.send("**All** Cogs are reloaded.")
+@bot.tree.command(
+	name = "reload",
+	description = "Reloads a Cog extension."
+)
+@app_commands.describe(extension = "The extension you'd like to reload.")
+@app_commands.guilds(CORE_GUILD)
+async def reload(interaction, *, extension: str):
+	if extension == "all":
+		await interaction.response.send_message("**All** Cogs are reloaded.")
 		for file in os.listdir("./cogs"):
 			if file.endswith(".py"):
-				name = file[:-3]
-				bot.reload_extension(f"cogs.{name}")
+				extension = file[:-3]
+				bot.reload_extension(f"cogs.{extension}")
 	try:
-		bot.reload_extension(f"cogs.{name}")
+		bot.reload_extension(f"cogs.{extension}")
 	except Exception as e:
-		return await ctx.send(default.traceback_maker(e))
-	await ctx.send(f'Cog "**`{name}`**" has been reloaded.')
+		return await interaction.response.send_message(default.traceback_maker(e))
+	await interaction.response.send_message(f'Cog "**`{extension}`**" has been reloaded.')
 
-@bot.tree.command()
-@commands.is_owner()
+@bot.tree.command(
+	name = "restart",
+	description = "Restarts the bot. (No furthur explanations required.)"
+)
+@app_commands.guilds(CORE_GUILD)
 async def restart(ctx):
 	await ctx.send(f"{config.success} Performing Complete Restart on Senarc Utilities.")
 	os.system("ls -l; python3 main.py")
 	await bot.close()
 
-@bot.tree.command()
-@commands.is_owner()
+@bot.tree.command(
+	name = "fetch",
+	description = "Fetches updates from github."
+)
+@app_commands.guilds(CORE_GUILD)
 async def fetch(ctx):
 	os.system("ls -l; git pull")
 	await ctx.send(f"{config.success} Fetched Github updates, Restarting client now...")
