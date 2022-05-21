@@ -1,6 +1,5 @@
 import aiohttp
 
-from imports import *
 from utilities import default
 
 class API_Commands(commands.Cog):

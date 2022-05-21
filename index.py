@@ -27,6 +27,22 @@ class Senarc(Bot):
 	async def close(self):
 		await super().close()
 
+	async def setup_hook(self):
+		for file in os.listdir("./cogs"):
+			try:
+				if file.endswith(".py"):
+					name = file[:-3]
+					await self.load_extension(f"cogs.{name}")
+					print(f"\"{name.capitalize()}\" cog loaded.")
+			except Exception as e:
+				print(e)
+			
+		try:
+			await self.load_extension("jishaku")
+		except Exception as e:
+			print(e)
+		Flags.HIDE = True
+
 bot = Senarc(command_prefix="s!", slash_commands=True, intents=intents)
 
 config = default.get("./config.json")
@@ -35,7 +51,7 @@ config = default.get("./config.json")
 async def on_ready():
     print("Bot initialized")
 
-@bot.command(slash_command=True, name='e', aliases=["eval"])
+@bot.command(hidden = True, name = 'e', aliases = ["eval"])
 async def _e(ctx, *, body=None):
 	if ctx.author.id not in config.dev_ids:
 		return await ctx.send(f"**`ERROR 401`**")
@@ -126,7 +142,7 @@ def get_syntax_error(e):
 		return f'```py\n{e.__class__.__name__}: {e}\n```'
 	return f'```py\n{e.text}{"^":>{e.offset}}\n{e.__class__.__name__}: {e}```'
 
-@bot.command(hidden=True)
+@bot.tree.command(hidden=True)
 @commands.is_owner()
 async def load(ctx, *, name: str):
 	try:
@@ -137,7 +153,7 @@ async def load(ctx, *, name: str):
 
 # Unload Cog
 
-@bot.command(hidden=True)
+@bot.tree.command(hidden=True)
 @commands.is_owner()
 async def unload(ctx, *, name: str):
 	try:
@@ -148,7 +164,7 @@ async def unload(ctx, *, name: str):
 
 # Reload Cog
 
-@bot.command(hidden=True)
+@bot.tree.command(hidden=True)
 @commands.is_owner()
 async def reload(ctx, *, name: str):
 	if name == "all":
@@ -163,14 +179,14 @@ async def reload(ctx, *, name: str):
 		return await ctx.send(default.traceback_maker(e))
 	await ctx.send(f'Cog "**`{name}`**" has been reloaded.')
 
-@bot.command(slash_command=True)
+@bot.tree.command()
 @commands.is_owner()
 async def restart(ctx):
 	await ctx.send(f"{config.success} Performing Complete Restart on Senarc Utilities.")
 	os.system("ls -l; python3 main.py")
-	await bot.logout()
+	await bot.close()
 
-@bot.command(slash_command=True)
+@bot.tree.command()
 @commands.is_owner()
 async def fetch(ctx):
 	os.system("ls -l; git pull")
@@ -178,24 +194,10 @@ async def fetch(ctx):
 	os.system("ls -l; python3 index.py")
 	sys.exit()
 
-def run():
-	for file in os.listdir("./cogs"):
-		try:
-			if file.endswith(".py"):
-				name = file[:-3]
-				bot.load_extension(f"cogs.{name}")
-				print(f"\"{name.capitalize()}\" cog loaded.")
-		except Exception as e:
-			print(e)
+def main():
 	try:
-		# bot.load_extension("jishaku")
-		null = None
-	except Exception as e:
-		print(e)
-	Flags.HIDE = True
-	try:
-		bot.run(utils.get_env("TOKEN"), reconnect=True)
+		bot.start(utils.get_env("TOKEN"), reconnect=True)
 	except Exception as e:
 		print(e)
 
-run()
+main()
