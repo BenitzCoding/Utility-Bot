@@ -2,6 +2,7 @@ import os
 import io
 import sys
 
+import asyncio
 import inspect
 import textwrap
 import traceback
@@ -219,10 +220,10 @@ async def fetch(ctx):
 	os.system("ls -l; python3 index.py")
 	sys.exit()
 
-def main():
+async def main():
 	try:
-		bot.start(utils.get_env("TOKEN"), reconnect=True)
+		await bot.start(utils.get_env("TOKEN"), reconnect=True)
 	except Exception as e:
 		print(e)
 
-main()
+asyncio.run(main())
