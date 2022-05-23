@@ -151,7 +151,7 @@ def get_syntax_error(e):
 @app_commands.guilds(CORE_GUILD)
 async def load(interaction, *, extension: str):
 	try:
-		bot.load_extension(f"cogs.{extension}")
+		await bot.load_extension(f"cogs.{extension}")
 	except Exception as e:
 		return await interaction.response.send_message(default.traceback_maker(e))
 	await interaction.response.send_message(f'"**{extension}**" Cog loaded')
@@ -166,7 +166,7 @@ async def load(interaction, *, extension: str):
 @app_commands.guilds(CORE_GUILD)
 async def unload(interaction, *, extension: str):
 	try:
-		bot.unload_extension(f"cogs.{extension}")
+		await bot.unload_extension(f"cogs.{extension}")
 	except Exception as e:
 		return await interaction.response.send_message(default.traceback_maker(e))
 	await interaction.response.send_message(f'"**{extension}**" Cog unloaded')
@@ -187,7 +187,7 @@ async def reload(interaction, *, extension: str):
 				extension = file[:-3]
 				bot.reload_extension(f"cogs.{extension}")
 	try:
-		bot.reload_extension(f"cogs.{extension}")
+		await bot.reload_extension(f"cogs.{extension}")
 	except Exception as e:
 		return await interaction.response.send_message(default.traceback_maker(e))
 	await interaction.response.send_message(f'Cog "**`{extension}`**" has been reloaded.')
