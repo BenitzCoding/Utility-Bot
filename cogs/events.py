@@ -7,7 +7,7 @@ class Events(Cog):
 	def __init__(self, senarc):
 		self.senarc = senarc
 
-	@Cog.listener('on_message')
+	@Cog.listener('on_member_join')
 	async def welcome_message(self, member):
 		if member.guild.id != 886543799843688498:
 			return
