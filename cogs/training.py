@@ -11,7 +11,6 @@ CORE_GUILD = Object(id = get_env("TRAINING_GUILD"))
 class Training(Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.config = get("./config.json")
 		self.actions = []
 		self.strikes = []
 
