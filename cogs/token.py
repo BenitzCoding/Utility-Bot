@@ -85,3 +85,6 @@ class Tokens(
 					)
 				else:
 					return await interaction.send(":no_entry_sign: There was an error while trying to generate a new API Token.")
+
+async def setup(bot):
+	await bot.add_cog(Tokens(bot))
