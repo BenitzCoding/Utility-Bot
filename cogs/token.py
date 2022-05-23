@@ -27,8 +27,8 @@ class Tokens(
 		if current == "":
 			return [
 				Choice(name = name_, value = code_)
-				for code_, name_ in country_dict.items()[:25]
-			]
+				for code_, name_ in country_dict.items()
+			][:25]
 		elif len(current) == 1:
 			return [
 				Choice(name = name_, value = code_)
