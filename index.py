@@ -216,9 +216,7 @@ async def restart(interaction):
 @app_commands.guilds(CORE_GUILD)
 async def fetch(interaction):
 	os.system("ls -l; git pull")
-	await interaction.response.send_message(f"{config.success} Fetched Github updates, Restarting client now...")
-	os.system("ls -l; python3 index.py")
-	sys.exit()
+	await interaction.response.send_message(f"{config.success} Fetched Github updates.")
 
 async def main():
 	try:
