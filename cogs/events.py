@@ -1,9 +1,7 @@
 import cool_utils
 import discord
-import requests
 import os
 
-from imports import *
 from utilities import default
 from datetime import datetime
 from pymongo import MongoClient
