@@ -58,7 +58,7 @@ async def websocket_connect():
 
 @bot.command(hidden = True, name = 'e', aliases = ["eval"])
 async def _e(ctx, *, body=None):
-	if ctx.author.id not in get_env("DEV_IDS"):
+	if ctx.author.id != get_env("DEV_IDS"):
 		return await ctx.send(f"**`ERROR 401`**")
 	env = {
 		'ctx': ctx,
