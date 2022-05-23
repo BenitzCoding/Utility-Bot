@@ -1,142 +1,143 @@
 import aiohttp
 
+from typing import Literal
+
+from discord import Embed
+from discord.ext.commands import Cog
+from discord.app_commands import command, describe, guilds, autocomplete
+
 from utilities import default
 
-class API_Commands(commands.Cog):
+class API_Commands(Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.config = default.get("./config.json")
 		self.API_BASE = "https://api.senarc.org"
 
-	@commands.command(description="Generates a API Token.")
-	async def token(self, ctx, option, setting = None):
-		if option == "firewall":
-			if setting == None:
-				return await ctx.send(f":no_entry_sign: You need to specify a setting for the firewall.")
-			if setting == "enable":
-				session = aiohttp.ClientSession()
-				url = self.API_BASE + "/token/modify"
-				headers = {
-					"Authorisation": self.config.api_token
-				}
-				data = {
-					"firewall": True
-				}
-				response = await session.post(url, headers=headers, json=data)
-				return await ctx.send(f":ballot_box_with_check: Firewall is now **enabled**.")
-			elif setting == "disable":
-				self.config["firewall"] = False
-				default.save("./config.json", self.config)
-				return await ctx.send(f":ballot_box_with_check: Firewall is now **disabled**.")
-			else:
-				return await ctx.send(f":no_entry_sign: You need to specify a valid setting for the firewall.")
-
-		if option == "generate":
-			session = aiohttp.ClientSession()
-			url = self.API_BASE + "/token/generate"
-			headers = {
-				"Authorisation": self.config.api_token
-			}
-			data = {
-				"discord_id": ctx.author.id,
-				"username": ctx.author.name,
-				
-			}
-			response = await session.post(url, headers=headers)
-			return await ctx.send(f":ballot_box_with_check: Your API Token has been generated.\n{response.json()['token']}")
-
-	@commands.command(description="Finds a MTA Certificate.", aliases=["cert", "mta", "mod-cert"])
-	async def certificate(self, ctx, method=None, token=None):
+	@command(
+		name = "certificate",
+		description = "Finds a MTA Certificate."
+	)
+	@describe(method = "Do you want to find certificate via token or id?")
+	@describe(query = "Enter the method's finding argument. ('id' or 'token')")
+	async def certificate(self, interaction, method: Literal['token', 'id'], query: str):
 		BASE_API = "https://api.senarc.org/mta/v1/validate/"
-		api_url = BASE_API + method + "/" + token
+		api_url = BASE_API + method + "/" + query
 
 		if method == None:
-			embed = discord.Embed(timestamp=ctx.message.created_at, colour=242424)
-			embed.set_author(name="MTA Validation", icon_url=ctx.author.display_avatar)
-			embed.add_field("Methods:", value=f"ID `n!certificate id <id>`\nGuild Certificate Token `n!certificate guild <token>`\nUser Certificate Token `n!certificate user <token>`")
-			return await ctx.send(embed=embed, ephemeral = True)
+			embed = Embed(timestamp=interaction.message.created_at, colour=242424)
+			embed.set_author(
+				name = "MTA Validation",
+				icon_url = interaction.user.display_avatar
+			)
+			embed.add_field("Methods:", value = f"ID `n!certificate id <id>`\nGuild Certificate Token `n!certificate guild <token>`\nUser Certificate Token `n!certificate user <token>`")
+			return await interaction.response.send_message(
+				embed = embed,
+				ephemeral = True
+			)
 
-		elif token == None:
-			embed = discord.Embed(timestamp=ctx.message.created_at, description="Please provide a ID/Token to search.", colour=242424)
-			embed.set_author(name="MTA Validation", icon_url=ctx.author.display_avatar)
-			return await ctx.send(embed=embed, ephemeral = True)
+		elif query == None:
+			embed = Embed(timestamp=interaction.message.created_at, description="Please provide a ID/Token to search.", colour=242424)
+			embed.set_author(name = "MTA Validation", icon_url = interaction.user.display_avatar)
+			return await interaction.response.send_message(
+				embed = embed,
+				ephemeral = True
+			)
 
 		elif method == "id":
-			try:
-				res = requests.get(api_url)
-				if res.json() == {"found": False}:
-					return await ctx.send(f"{self.config.forbidden} No Certificate with that ID.", ephemeral = True)
+			async with aiohttp.ClientSession() as session:
+				async with session.get(api_url) as resp:
+					if resp.status == 200:
+						data = await resp.json()
+						if data['type'] == "Guild":
+							embed = Embed(timestamp = interaction.message.created_at, colour = 242424)
+							embed.set_author(name = "MTA Certificate Information", icon_url = interaction.user.display_avatar)
+							embed.add_field(name = "Token:", value = f"`{json['token']}`", inline = False)
+							embed.add_field(name = "Type:", value = f"`{json['type']}`", inline = False)
+							embed.add_field(name = "ID:", value = f"`{json['_id']}`", inline = False)
+							embed.add_field(name = "Owner:", value = f"{json['owner']}(`{json['owner-id']}`)", inline = False)
+							embed.add_field(name = "Name:", value = f"{json['name']}", inline = False)
+							embed.add_field(name = "Status:", value = f"`{json['status']}`", inline = False)
+							return await interaction.response.send_message(embed=embed)
 
-				elif res.json()['type'] == "Guild":
-					json = res.json()
-					embed = discord.Embed(timestamp=ctx.message.created_at, colour=242424)
-					embed.set_author(name="MTA Certificate Information", icon_url=ctx.author.display_avatar)
-					embed.add_field(name="Token:", value=f"`{json['token']}`", inline=False)
-					embed.add_field(name="Type:", value=f"`{json['type']}`", inline=False)
-					embed.add_field(name="ID:", value=f"`{json['_id']}`", inline=False)
-					embed.add_field(name="Owner:", value=f"{json['owner']}(`{json['owner-id']}`)", inline=False)
-					embed.add_field(name="Name:", value=f"{json['name']}", inline=False)
-					embed.add_field(name="Status:", value=f"`{json['status']}`", inline=False)
-					return await ctx.send(embed=embed)
+						elif data['type'] == "User":
+							embed = Embed(timestamp = interaction.message.created_at, colour = 242424)
+							embed.set_author(name = "MTA Certificate Information", icon_url = interaction.user.display_avatar)
+							embed.add_field(name = "Token:", value = f"`{json['token']}`", inlin=False)
+							embed.add_field(name = "Type:", value = f"`{json['type']}`", inline = False)
+							embed.add_field(name = "User:", value = f"{json['discord']}(`{json['_id']}`)", inline = False)
+							embed.add_field(name = "Registered Under Server:", value = f"{json['srv-registered']}", inline = False)
+							embed.add_field(name = "Server ID:", value = f"{json['srv-id']}", inline = False)
+							embed.add_field(name = "Status:", value = f"`{json['status']}`", inline = False)
+							return await interaction.response.send_message(embed=embed)
 
-				elif res.json()['type'] == "User":
-					json = res.json()
-					embed = discord.Embed(timestamp=ctx.message.created_at, colour=242424)
-					embed.set_author(name="MTA Certificate Information", icon_url=ctx.author.display_avatar)
-					embed.add_field(name="Token:", value=f"`{json['token']}`", inlin=False)
-					embed.add_field(name="Type:", value=f"`{json['type']}`", inline=False)
-					embed.add_field(name="User:", value=f"{json['discord']}(`{json['_id']}`)", inline=False)
-					embed.add_field(name="Registered Under Server:", value=f"{json['srv-registered']}", inline=False)
-					embed.add_field(name="Server ID:", value=f"{json['srv-id']}", inline=False)
-					embed.add_field(name="Status:", value=f"`{json['status']}`", inline=False)
-					return await ctx.send(embed=embed)
+						elif resp.status == 404:
+							return await interaction.response.send_message(
+								f"{self.config.forbidden} No certificate found with that ID.",
+								ephemeral = True
+							)
 
-			except:
-				return await ctx.send(f"{self.config.forbidden} The API is currently Down.", ephemeral = True)
+						elif resp.status == 500:
+							return await interaction.response.send_message(
+								":fire: An error occured while processing your request.",
+								ephemeral = True
+							)
 
 		elif method == "guild":
-			try:
-				res = requests.get(api_url)
-				json = res.json()
-				if res.json() == {"found": False}:
-					return await ctx.send(f"{self.config.forbidden} No Certificate with that Token.", ephemeral = True)
+			async with aiohttp.ClientSession() as session:
+				async with session.get(api_url) as resp:
+					if resp.status == 200:
+						data = await resp.json()
+						embed = Embed(timestamp = interaction.message.created_at, colour = 242424)
+						embed.add_field(name = "Token:", value = f"`{data['token']}`", inline = False)
+						embed.set_author(name = "MTA Certificate Information", icon_url = interaction.user.display_avatar)
+						embed.add_field(name = "ID:", value = f"`{data['_id']}`", inline = False)
+						embed.add_field(name = "Type:", value = f"`{data['type']}`", inline = False)
+						embed.add_field(name = "Owner:", value = f"{data['owner']}(`{data['owner-id']}`)", inline = False)
+						embed.add_field(name = "Name:", value = f"{data['name']}", inline = False)
+						embed.add_field(name = "Status:", value = f"`{data['status']}`", inline = False)
+						return await interaction.response.send_message(embed=embed)
 
-				else:
-					embed = discord.Embed(timestamp=ctx.message.created_at, colour=242424)
-					embed.add_field(name="Token:", value=f"`{json['token']}`", inline=False)
-					embed.set_author(name="MTA Certificate Information", icon_url=ctx.author.display_avatar)
-					embed.add_field(name="ID:", value=f"`{json['_id']}`", inline=False)
-					embed.add_field(name="Type:", value=f"`{json['type']}`", inline=False)
-					embed.add_field(name="Owner:", value=f"{json['owner']}(`{json['owner-id']}`)", inline=False)
-					embed.add_field(name="Name:", value=f"{json['name']}", inline=False)
-					embed.add_field(name="Status:", value=f"`{json['status']}`", inline=False)
-					return await ctx.send(embed=embed)
+					elif resp.status == 404:
+						return await interaction.response.send_message(
+							f"{self.config.forbidden} No certificate found with that ID.",
+							ephemeral = True
+						)
 
-			except:
-				return await ctx.send(f"{self.config.forbidden} The API is currently Down.", ephemeral = True)
+					elif resp.status == 500:
+						return await interaction.response.send_message(
+							":fire: An error occured while processing your request.",
+							ephemeral = True
+						)
 
 		elif method == "user":
-			try:
-				res = requests.get(api_url)
-				json = res.json()
-				if res.json() == {"found": False}:
-					return await ctx.send(f"{self.config.forbidden} No Certificate with that Token.", ephemeral = True)
+			async with aiohttp.ClientSession() as session:
+				async with session.get(api_url) as resp:
+					if resp.status == 200:
+						data = await resp.json()
+						embed = Embed(timestamp = interaction.message.created_at, colour = 242424)
+						embed.set_author(name = "MTA Certificate Information", icon_url = interaction.user.display_avatar)
+						embed.add_field(name = "Token:", value = f"`{data['token']}`", inline = False)
+						embed.add_field(name = "Type:", value = f"`{data['type']}`", inline = False)
+						embed.add_field(name = "User:", value = f"{data['discord']}(`{data['_id']}`)", inline = False)
+						embed.add_field(name = "Registered Under Server:", value = f"{data['srv-registered']}", inline = False)
+						embed.add_field(name = "Server ID:", value = f"{data['srv-id']}", inline = False)
+						embed.add_field(name = "Status:", value = f"`{data['status']}`", inline = False)
+						return await interaction.response.send_message(embed=embed)
 
-				else:
-					embed = discord.Embed(timestamp=ctx.message.created_at, colour=242424)
-					embed.set_author(name="MTA Certificate Information", icon_url=ctx.author.display_avatar)
-					embed.add_field(name="Token:", value=f"`{json['token']}`", inline=False)
-					embed.add_field(name="Type:", value=f"`{json['type']}`", inline=False)
-					embed.add_field(name="User:", value=f"{json['discord']}(`{json['_id']}`)", inline=False)
-					embed.add_field(name="Registered Under Server:", value=f"{json['srv-registered']}", inline=False)
-					embed.add_field(name="Server ID:", value=f"{json['srv-id']}", inline=False)
-					embed.add_field(name="Status:", value=f"`{json['status']}`", inline=False)
-					return await ctx.send(embed=embed)
-			except:
-				return await ctx.send(f"{self.config.forbidden} The API is currently Down.", ephemeral = True)
+					elif resp.status == 404:
+						return await interaction.response.send_message(
+							f"{self.config.forbidden} No certificate found with that ID.",
+							ephemeral = True
+						)
 
+					elif resp.status == 500:
+						return await interaction.response.send_message(
+							":fire: An error occured while processing your request.",
+							ephemeral = True
+						)
 		else:
-			await ctx.send(f"{self.config.forbidden} Invalid validation method.", ephemeral = True)
+			await interaction.response.send_message(f"{self.config.forbidden} Invalid validation method.", ephemeral = True)
 
 def setup(bot):
 	bot.add_cog(API_Commands(bot))
