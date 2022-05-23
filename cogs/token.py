@@ -11,10 +11,10 @@ from functions import validate_user, get_env
 
 country_dict = dict(countries_for_language("en"))
 
-async def get_country_name():
+async def get_country_name(self, interaction, current: str):
 	return [
 		Choice(name=country_name, value=country_code)
-		for country_code, country_name in country_dict.items()
+		for country_code, country_name in country_dict.items() if current.lower() in country_name.lower() or current.lower() in country_code.lower()
 	]
 
 class Tokens(
