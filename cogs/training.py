@@ -1,58 +1,89 @@
-from imports import *
+from typing import Literal
+
+from discord import Member, Object
+from discord.ext.commands import Cog
+from discord.app_commands import command, describe, default_permissions, guilds
+
+from functions import get_env
 from utilities.default import get
 
-class Training(commands.Cog):
+CORE_GUILD = Object(id = get_env("TRAINING_GUILD"))
+
+class Training(Cog):
 	def __init__(self, bot):
 		self.bot = bot
 		self.config = get("./config.json")
 		self.actions = []
 		self.strikes = []
 
-	@commands.command(command_message=False, guild_whitelist=[886543799843688498], slash_command=True, brief="Create the correct moderation action for the training.")
-	@commands.has_permissions(administrator=True)
-	async def modaction(self, ctx, action):
-		if action.lower() == "mute" or action.lower() == "warn" or action.lower() == "ban":
+	@command(
+		name = "modaction",
+		description="Create the correct moderation action for the training."
+	)
+	@describe(action = "What's the action you want to create?")
+	@guilds(CORE_GUILD)
+	@default_permissions(administrator=True)
+	async def modaction(self, interaction, action: Literal['warn', 'mute', 'kick', 'ban']):
+		if action.lower() == "mute" or action.lower() == "warn" or action.lower() == "ban" or action.lower() == "kick":
 			self.actions.append(action.lower())
-			await ctx.send(f"{self.config.success} Added \"{action}\" to possible moderation actions.", ephemeral = True)
+			await interaction.response.send_message(f"{self.config.success} Added \"{action}\" to possible moderation actions.", ephemeral = True)
 
 		else:
-			await ctx.send(f"{self.config.forbidden} That is not a valid moderation action.", ephemeral = True)
+			await interaction.response.send_message(f"{self.config.forbidden} That is not a valid moderation action.", ephemeral = True)
 
-	@commands.command(slash_command=True, guild_whitelist=[886543799843688498], brief="Warns a user in training.")
-	async def warn(self, ctx, user, *, message=None):
+	@command(
+		name = "warn",
+		description = "Warns a user in training."
+	)
+	@describe(user = "Who do you want to warn?")
+	@describe(reason = "Why do you want to take this moderation action towards them?")
+	@guilds(CORE_GUILD)
+	async def warn(self, interaction, user: str, reason: str):
 		if "warn" in self.actions:
-			await ctx.send(f"{self.config.success} Warned {user} for `{message}`")
-			self.actions.pop("warn")
+			await interaction.resonse.send_message(f"{self.config.success} Warned {user} for `{reason}`")
+			self.actions.remove("warn")
 
-		elif message == None:
+		elif reason == None:
 			self.strikes.append("No valid reasoning.")
-			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
+			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
 
 		else:
 			self.strikes.append("Wrong moderation action.")
-			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
+			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
 
-	@commands.command(slash_command=True, guild_whitelist=[886543799843688498], brief="Mute a user in training.")
-	async def mute(self, ctx, user, *, message=None):
+	@command(
+		name = "mute",
+		description = "Mute a user in training."
+	)
+	@describe(user = "Who do you want to mute?")
+	@describe(reason = "Why do you want to take this moderation action towards them?")
+	@guilds(CORE_GUILD)
+	async def mute(self, interaction, user: str, reason: str):
 		if "mute" in self.actions:
-			await ctx.send(f"{self.config.success} Muted {user} for `{message}`")
+			await interaction.response.send_message(f"{self.config.success} Muted {user} for `{reason}`")
 			self.actions.pop("mute")
 
-		elif message == None:
+		elif reason == None:
 			self.strikes.append("No valid reasoning.")
-			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
+			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
 
 		else:
 			self.strikes.append("Wrong moderation action.")
-			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
+			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
 
-	@commands.command(slash_command=True, guild_whitelist=[886543799843688498], brief="Warns a user in training.")
-	async def ban(self, ctx, user, *, message=None):
+	@command(
+		name = "ban",
+		description = "Warns a user in training."
+	)
+	@describe(user = "Who do you want to ban?")
+	@describe(reason = "Why do you want to take this moderation action towards them?")
+	@guilds(CORE_GUILD)
+	async def ban(self, ctx, user: str, reason: str):
 		if "ban" in self.actions:
-			await ctx.send(f"{self.config.success} Banned {user} for `{message}`")
+			await ctx.send(f"{self.config.success} Banned {user} for `{reason}`")
 			self.actions.pop("ban")
 
-		elif message == None:
+		elif reason == None:
 			self.strikes.append("No valid reasoning.")
 			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
 
@@ -60,9 +91,13 @@ class Training(commands.Cog):
 			self.strikes.append("Wrong moderation action.")
 			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
 
-	@commands.command(slash_command=True, guild_whitelist=[886543799843688498], brief="Shows the user's strikes.")
+	@command(
+		name = "strikes",
+		description = "Shows the user's strikes."
+	)
+	@guilds(CORE_GUILD)
 	async def strikes(self, ctx):
 		await ctx.send(f"{len(self.strikes)} Strikes recorded.")
 
-def setup(bot):
-	bot.add_cog(Training(bot))
+async def setup(bot):
+	await bot.add_cog(Training(bot))
