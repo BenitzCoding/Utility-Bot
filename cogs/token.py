@@ -11,7 +11,7 @@ from functions import validate_user, get_env
 
 country_dict = dict(countries_for_language("en"))
 
-def get_country_name(country_code):
+def get_country_name():
 	return [
 		Choice(name=country_name, value=country_code)
 		for country_code, country_name in country_dict.items()
