@@ -1,6 +1,3 @@
-import os
-import cool_utils
-
 from discord import Embed
 from discord.ext.commands import Cog
 

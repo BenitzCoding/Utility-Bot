@@ -1,6 +1,6 @@
 from typing import Literal
 
-from discord import Member, Object
+from discord import Object
 from discord.ext.commands import Cog
 from discord.app_commands import command, describe, default_permissions, guilds
 

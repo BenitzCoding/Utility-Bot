@@ -2,7 +2,6 @@ import aiohttp
 
 from typing import Literal
 from country_list import countries_for_language
-from motor.motor_asyncio import AsyncIOMotorClient
 
 from discordi import Embed
 from discord.ext.commands import GroupCog
