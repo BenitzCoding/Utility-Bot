@@ -34,7 +34,7 @@ class Tokens(
 	)
 	@describe(toggle = "Enable or Disable your API Token Firewall.")
 	async def firewall(self, interaction, toggle: Literal["enable", "disable"]):
-		if not validate_user(interaction.user.id):
+		if not await validate_user(interaction.user.id):
 			return await interaction.send(":no_entry_sign: You don't have an API token linked to your account..")
 
 		if toggle == "enable":
@@ -65,9 +65,18 @@ class Tokens(
 		name = "generate",
 		description = "Generate a new API Token."
 	)
+	@describe(country_code = "The country code of your internet connection.")
 	async def generate(self, interaction, country_code: get_country_codes):
+		if await validate_user(interaction.user.id):
+			return await interaction.send(":no_entry_sign: You already have an API token linked to your account.")
+
 		async with aiohttp.ClientSession() as session:
-			async with session.post(self.BASE_API, headers=self.HEADER_JSON) as response:
+			data = {
+				"discord_id": interaction.user.id,
+				"username": interaction.user.name,
+				"country_code": country_code
+			}
+			async with session.post(self.BASE_API, json = data, headers = self.HEADER_JSON) as response:
 				if response.status == 200:
 					data = await response.json()
 					embed = Embed(
