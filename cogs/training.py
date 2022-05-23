@@ -38,7 +38,7 @@ class Training(Cog):
 	@describe(user = "Who do you want to warn?")
 	@describe(reason = "Why do you want to take this moderation action towards them?")
 	@guilds(CORE_GUILD)
-	async def warn(self, interaction, user: str, reason: str):
+	async def warn(self, interaction, user: str, reason: str = None):
 		if "warn" in self.actions:
 			await interaction.resonse.send_message(f"{self.config.success} Warned {user} for `{reason}`")
 			self.actions.remove("warn")
@@ -53,15 +53,15 @@ class Training(Cog):
 
 	@command(
 		name = "mute",
-		description = "Mute a user in training."
+		description = "Mutes a user in training."
 	)
 	@describe(user = "Who do you want to mute?")
 	@describe(reason = "Why do you want to take this moderation action towards them?")
 	@guilds(CORE_GUILD)
-	async def mute(self, interaction, user: str, reason: str):
+	async def mute(self, interaction, user: str, reason: str = None):
 		if "mute" in self.actions:
 			await interaction.response.send_message(f"{self.config.success} Muted {user} for `{reason}`")
-			self.actions.pop("mute")
+			self.actions.remove("mute")
 
 		elif reason == None:
 			self.strikes.append("No valid reasoning.")
@@ -73,15 +73,35 @@ class Training(Cog):
 
 	@command(
 		name = "ban",
-		description = "Warns a user in training."
+		description = "Bans a user in training."
 	)
 	@describe(user = "Who do you want to ban?")
 	@describe(reason = "Why do you want to take this moderation action towards them?")
 	@guilds(CORE_GUILD)
-	async def ban(self, interaction, user: str, reason: str):
+	async def ban(self, interaction, user: str, reason: str = None):
 		if "ban" in self.actions:
 			await interaction.response.send_message(f"{self.config.success} Banned {user} for `{reason}`")
-			self.actions.pop("ban")
+			self.actions.remove("ban")
+
+		elif reason == None:
+			self.strikes.append("No valid reasoning.")
+			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
+
+		else:
+			self.strikes.append("Wrong moderation action.")
+			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
+
+	@command(
+		name = "kick",
+		description = "Kicks a user in training."
+	)
+	@describe(user = "Who do you want to kick?")
+	@describe(reason = "Why do you want to take this moderation action towards them?")
+	@guilds(CORE_GUILD)
+	async def kick(self, interaction, user: str, reason: str = None):
+		if "ban" in self.actions:
+			await interaction.response.send_message(f"{self.config.success} Kicked {user} for `{reason}`")
+			self.actions.remove("kick")
 
 		elif reason == None:
 			self.strikes.append("No valid reasoning.")
