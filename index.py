@@ -48,9 +48,9 @@ bot = Senarc(command_prefix="s!", slash_commands=True, intents=intents)
 
 config = default.get("./config.json")
 
-@bot.event
-async def on_ready():
-    print("Bot initialized")
+@bot.listen("on_ready")
+async def websocket_connect():
+    print("Senarc Bot has established websocket connection.")
 
 @bot.command(hidden = True, name = 'e', aliases = ["eval"])
 async def _e(ctx, *, body=None):
