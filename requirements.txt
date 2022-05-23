@@ -3,3 +3,4 @@ psutil
 dnspython
 jishaku
 timeago
+country_list
