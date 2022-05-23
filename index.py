@@ -7,12 +7,12 @@ import textwrap
 import traceback
 
 from contextlib import redirect_stdout
+from jishaku.flags import Flags
 
 from discord import Intents, Object, app_commands
 from discord.ext.commands import Bot
 
-from jishaku.flags import Flags
-
+from functions import get_env, sync_application
 from utilities import utils, default
 
 CORE_GUILD = Object(id = utils.get_env("CORE_GUILD"))
@@ -43,8 +43,14 @@ class Senarc(Bot):
 		except Exception as e:
 			print(e)
 		Flags.HIDE = True
+		self.loop.create_task(sync_application(self))
 
-bot = Senarc(command_prefix="s!", slash_commands=True, intents=intents)
+bot = Senarc(
+	command_prefix = "s!",
+	application_id = get_env("APPLICATION_ID"),
+	slash_commands = True,
+	intents = intents
+)
 
 config = default.get("./config.json")
 
