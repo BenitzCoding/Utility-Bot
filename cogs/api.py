@@ -6,12 +6,9 @@ from discord import Embed
 from discord.ext.commands import Cog
 from discord.app_commands import command, describe, guilds, autocomplete
 
-from utilities import default
-
 class API_Commands(Cog):
 	def __init__(self, bot):
 		self.bot = bot
-		self.config = default.get("./config.json")
 		self.API_BASE = "https://api.senarc.org"
 
 	@command(

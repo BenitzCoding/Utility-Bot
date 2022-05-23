@@ -5,7 +5,6 @@ from discord.ext.commands import Cog
 from discord.app_commands import command, describe, default_permissions, guilds
 
 from functions import get_env
-from utilities.default import get
 
 CORE_GUILD = Object(id = get_env("TRAINING_GUILD"))
 
@@ -26,10 +25,10 @@ class Training(Cog):
 	async def modaction(self, interaction, action: Literal['warn', 'mute', 'kick', 'ban']):
 		if action.lower() == "mute" or action.lower() == "warn" or action.lower() == "ban" or action.lower() == "kick":
 			self.actions.append(action.lower())
-			await interaction.response.send_message(f"{self.config.success} Added \"{action}\" to possible moderation actions.", ephemeral = True)
+			await interaction.response.send_message(f"{get_env('SUCCESS')} Added \"{action}\" to possible moderation actions.", ephemeral = True)
 
 		else:
-			await interaction.response.send_message(f"{self.config.forbidden} That is not a valid moderation action.", ephemeral = True)
+			await interaction.response.send_message(f"{get_env('FORBIDDEN')} That is not a valid moderation action.", ephemeral = True)
 
 	@command(
 		name = "warn",
@@ -40,16 +39,16 @@ class Training(Cog):
 	@guilds(CORE_GUILD)
 	async def warn(self, interaction, user: str, reason: str = None):
 		if "warn" in self.actions:
-			await interaction.resonse.send_message(f"{self.config.success} Warned {user} for `{reason}`")
+			await interaction.resonse.send_message(f"{get_env('SUCCESS')} Warned {user} for `{reason}`")
 			self.actions.remove("warn")
 
 		elif reason == None:
 			self.strikes.append("No valid reasoning.")
-			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
+			await interaction.response.send_message(f"{get_env('FORBIDDEN')} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
 
 		else:
 			self.strikes.append("Wrong moderation action.")
-			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
+			await interaction.response.send_message(f"{get_env('FORBIDDEN')} Strike {len(self.strikes)}, that's not the right moderation action.")
 
 	@command(
 		name = "mute",
@@ -60,16 +59,16 @@ class Training(Cog):
 	@guilds(CORE_GUILD)
 	async def mute(self, interaction, user: str, reason: str = None):
 		if "mute" in self.actions:
-			await interaction.response.send_message(f"{self.config.success} Muted {user} for `{reason}`")
+			await interaction.response.send_message(f"{get_env('SUCCESS')} Muted {user} for `{reason}`")
 			self.actions.remove("mute")
 
 		elif reason == None:
 			self.strikes.append("No valid reasoning.")
-			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
+			await interaction.response.send_message(f"{get_env('FORBIDDEN')} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
 
 		else:
 			self.strikes.append("Wrong moderation action.")
-			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
+			await interaction.response.send_message(f"{get_env('FORBIDDEN')} Strike {len(self.strikes)}, that's not the right moderation action.")
 
 	@command(
 		name = "ban",
@@ -80,16 +79,16 @@ class Training(Cog):
 	@guilds(CORE_GUILD)
 	async def ban(self, interaction, user: str, reason: str = None):
 		if "ban" in self.actions:
-			await interaction.response.send_message(f"{self.config.success} Banned {user} for `{reason}`")
+			await interaction.response.send_message(f"{get_env('SUCCESS')} Banned {user} for `{reason}`")
 			self.actions.remove("ban")
 
 		elif reason == None:
 			self.strikes.append("No valid reasoning.")
-			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
+			await interaction.response.send_message(f"{get_env('FORBIDDEN')} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
 
 		else:
 			self.strikes.append("Wrong moderation action.")
-			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
+			await interaction.response.send_message(f"{get_env('FORBIDDEN')} Strike {len(self.strikes)}, that's not the right moderation action.")
 
 	@command(
 		name = "kick",
@@ -100,16 +99,16 @@ class Training(Cog):
 	@guilds(CORE_GUILD)
 	async def kick(self, interaction, user: str, reason: str = None):
 		if "ban" in self.actions:
-			await interaction.response.send_message(f"{self.config.success} Kicked {user} for `{reason}`")
+			await interaction.response.send_message(f"{get_env('SUCCESS')} Kicked {user} for `{reason}`")
 			self.actions.remove("kick")
 
 		elif reason == None:
 			self.strikes.append("No valid reasoning.")
-			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
+			await interaction.response.send_message(f"{get_env('FORBIDDEN')} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
 
 		else:
 			self.strikes.append("Wrong moderation action.")
-			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
+			await interaction.response.send_message(f"{get_env('FORBIDDEN')} Strike {len(self.strikes)}, that's not the right moderation action.")
 
 	@command(
 		name = "strikes",

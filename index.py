@@ -14,7 +14,6 @@ from discord import Intents, Object, app_commands
 from discord.ext.commands import Bot
 
 from functions import get_env, sync_application
-from utilities import utils, default
 
 CORE_GUILD = Object(id = get_env("CORE_GUILD"))
 intents = Intents.all()
@@ -53,15 +52,13 @@ bot = Senarc(
 	intents = intents
 )
 
-config = default.get("./config.json")
-
 @bot.listen("on_ready")
 async def websocket_connect():
     print("Senarc Bot has established websocket connection.")
 
 @bot.command(hidden = True, name = 'e', aliases = ["eval"])
 async def _e(ctx, *, body=None):
-	if ctx.author.id not in config.dev_ids:
+	if ctx.author.id not in get_env("DEV_IDS"):
 		return await ctx.send(f"**`ERROR 401`**")
 	env = {
 		'ctx': ctx,
@@ -159,8 +156,11 @@ def get_syntax_error(e):
 async def load(interaction, *, extension: str):
 	try:
 		await bot.load_extension(f"cogs.{extension}")
-	except Exception as e:
-		return await interaction.response.send_message(default.traceback_maker(e))
+	except Exception as err:
+		_traceback = ''.join(traceback.format_tb(err.__traceback__))
+		error = ('```py\n{1}{0}: {2}\n```').format(type(err).__name__, _traceback, err)
+		tb = error
+		return await interaction.response.send_message(tb)
 	await interaction.response.send_message(f'"**{extension}**" Cog loaded')
 
 # Unload Cog
@@ -174,8 +174,11 @@ async def load(interaction, *, extension: str):
 async def unload(interaction, *, extension: str):
 	try:
 		await bot.unload_extension(f"cogs.{extension}")
-	except Exception as e:
-		return await interaction.response.send_message(default.traceback_maker(e))
+	except Exception as err:
+		_traceback = ''.join(traceback.format_tb(err.__traceback__))
+		error = ('```py\n{1}{0}: {2}\n```').format(type(err).__name__, _traceback, err)
+		tb = error
+		return await interaction.response.send_message(tb)
 	await interaction.response.send_message(f'"**{extension}**" Cog unloaded')
 
 # Reload Cog
@@ -195,8 +198,11 @@ async def reload(interaction, *, extension: str):
 				bot.reload_extension(f"cogs.{extension}")
 	try:
 		await bot.reload_extension(f"cogs.{extension}")
-	except Exception as e:
-		return await interaction.response.send_message(default.traceback_maker(e))
+	except Exception as err:
+		_traceback = ''.join(traceback.format_tb(err.__traceback__))
+		error = ('```py\n{1}{0}: {2}\n```').format(type(err).__name__, _traceback, err)
+		tb = error
+		return await interaction.response.send_message(tb)
 	await interaction.response.send_message(f'Cog "**`{extension}`**" has been reloaded.')
 
 @bot.tree.command(
@@ -205,7 +211,7 @@ async def reload(interaction, *, extension: str):
 )
 @app_commands.guilds(CORE_GUILD)
 async def restart(interaction):
-	await interaction.response.send_message(f"{config.success} Performing Complete Restart on Senarc Utilities.")
+	await interaction.response.send_message(f"{get_env('SUCCESS')} Performing Complete Restart on Senarc Utilities.")
 	os.system("ls -l; python3 main.py")
 	await bot.close()
 
@@ -216,11 +222,11 @@ async def restart(interaction):
 @app_commands.guilds(CORE_GUILD)
 async def fetch(interaction):
 	os.system("ls -l; git pull")
-	await interaction.response.send_message(f"{config.success} Fetched Github updates.")
+	await interaction.response.send_message(f"{get_env('SUCCESS')} Fetched Github updates.")
 
 async def main():
 	try:
-		await bot.start(utils.get_env("TOKEN"), reconnect=True)
+		await bot.start(get_env("TOKEN"), reconnect=True)
 	except Exception as e:
 		print(e)
 

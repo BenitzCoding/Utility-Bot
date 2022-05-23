@@ -3,12 +3,9 @@ from discord.ext.commands import Cog
 
 from datetime import datetime
 
-from utilities.default import get
-
 class Events(Cog):
 	def __init__(self, senarc):
 		self.senarc = senarc
-		self.config = get("./config.json")
 
 	@Cog.listener('on_message')
 	async def welcome_message(self, member):
