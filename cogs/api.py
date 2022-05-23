@@ -139,5 +139,5 @@ class API_Commands(Cog):
 		else:
 			await interaction.response.send_message(f"{self.config.forbidden} Invalid validation method.", ephemeral = True)
 
-def setup(bot):
-	bot.add_cog(API_Commands(bot))
+async def setup(bot):
+	await bot.add_cog(API_Commands(bot))
