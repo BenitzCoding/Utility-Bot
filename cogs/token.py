@@ -65,8 +65,8 @@ class Tokens(
 		name = "generate",
 		description = "Generate a new API Token."
 	)
-	@describe(country_code = "The country code of your internet connection.")
-	@autocomplete(country_code = get_country_name)
+	@describe(country = "The country code of your internet connection.")
+	@autocomplete(country = get_country_name)
 	async def generate(self, interaction, country: str):
 		if await validate_user(interaction.user.id):
 			return await interaction.send(":no_entry_sign: You already have an API token linked to your account.")
