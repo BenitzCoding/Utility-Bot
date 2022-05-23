@@ -204,8 +204,8 @@ async def reload(interaction, *, extension: str):
 	description = "Restarts the bot. (No furthur explanations required.)"
 )
 @app_commands.guilds(CORE_GUILD)
-async def restart(ctx):
-	await ctx.send(f"{config.success} Performing Complete Restart on Senarc Utilities.")
+async def restart(interaction):
+	await interaction.response.send_message(f"{config.success} Performing Complete Restart on Senarc Utilities.")
 	os.system("ls -l; python3 main.py")
 	await bot.close()
 
@@ -214,9 +214,9 @@ async def restart(ctx):
 	description = "Fetches updates from github."
 )
 @app_commands.guilds(CORE_GUILD)
-async def fetch(ctx):
+async def fetch(interaction):
 	os.system("ls -l; git pull")
-	await ctx.send(f"{config.success} Fetched Github updates, Restarting client now...")
+	await interaction.response.send_message(f"{config.success} Fetched Github updates, Restarting client now...")
 	os.system("ls -l; python3 index.py")
 	sys.exit()
 
