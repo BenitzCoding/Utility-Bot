@@ -8,13 +8,14 @@ import traceback
 
 from contextlib import redirect_stdout
 
-from discord import Intents, app_commands
+from discord import Intents, Object, app_commands
 from discord.ext.commands import Bot
 
 from jishaku.flags import Flags
 
 from utilities import utils, default
 
+CORE_GUILD = Object(id = utils.get_env("CORE_GUILD"))
 intents = Intents.all()
 
 class Senarc(Bot):
