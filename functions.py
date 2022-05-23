@@ -23,9 +23,9 @@ async def validate_user(user: int) -> bool:
 async def sync_application(self):
     CORE_GUILD = Object(id = int(get_env("CORE_GUILD")))
     TRAINING_GUILD = Object(id = int(get_env("TRAINING_GUILD")))
+    await self.tree.sync()
     await self.tree.sync(guild = CORE_GUILD)
     await self.tree.sync(guild = TRAINING_GUILD)
-    await self.tree.sync()
 
 def get_env(constant: str) -> str:
     load_dotenv(find_dotenv())
