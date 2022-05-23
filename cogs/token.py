@@ -47,7 +47,10 @@ class Tokens(
 	@describe(toggle = "Enable or Disable your API Token Firewall.")
 	async def firewall(self, interaction, toggle: Literal["enable", "disable"]):
 		if not await validate_user(interaction.user.id):
-			return await interaction.send(":no_entry_sign: You don't have an API token linked to your account..")
+			return await interaction.response.send_message(
+				":no_entry_sign: You don't have an API token linked to your account.",
+				ephemeral = True
+			)
 
 		if toggle == "enable":
 			async with aiohttp.ClientSession() as session:
@@ -57,9 +60,14 @@ class Tokens(
 				}
 				async with session.patch(self.BASE_API, json=data) as response:
 					if response.status == 200:
-						return await interaction.send(":ballot_box_with_check: Firewall is now **enabled**.")
+						return await interaction.response.send_message(
+							":ballot_box_with_check: Firewall is now **enabled**."
+						)
 					else:
-						return await interaction.send(":no_entry_sign: There was an error while trying to enable the firewall.")
+						return await interaction.response.send_message(
+							":no_entry_sign: There was an error while trying to enable the firewall.",
+							ephemeral = True
+						)
 
 		elif toggle == "disable":
 			async with aiohttp.ClientSession() as session:
@@ -69,9 +77,14 @@ class Tokens(
 				}
 				async with session.patch(self.BASE_API, json=data) as response:
 					if response.status == 200:
-						return await interaction.send(":ballot_box_with_check: Firewall is now **disabled**.")
+						return await interaction.response.send_message(
+							":ballot_box_with_check: Firewall is now **disabled**."
+						)
 					else:
-						return await interaction.send(":no_entry_sign: There was an error while trying to disable the firewall.")
+						return await interaction.response.send_message(
+							":no_entry_sign: There was an error while trying to disable the firewall.",
+							ephemeral = True
+						)
 
 	@command(
 		name = "generate",
@@ -81,7 +94,10 @@ class Tokens(
 	@autocomplete(country = get_country_name)
 	async def generate(self, interaction, country: str):
 		if await validate_user(interaction.user.id):
-			return await interaction.send(":no_entry_sign: You already have an API token linked to your account.")
+			return await interaction.response.send_message(
+				":no_entry_sign: You already have an API token linked to your account.",
+				ephemeral = True
+			)
 
 		async with aiohttp.ClientSession() as session:
 			data = {
@@ -100,12 +116,15 @@ class Tokens(
 						name = "Senarc API Token",
 						icon_url = self.bot.user.avatar_url
 					)
-					return await interaction.send(
+					return await interaction.response.send_message(
 						embed = embed,
 						ephemeral = True
 					)
 				else:
-					return await interaction.send(":no_entry_sign: There was an error while trying to generate a new API Token.")
+					return await interaction.response.send_message(
+						":no_entry_sign: There was an error while trying to generate a new API Token.",
+						ephemeral = True
+					)
 
 async def setup(bot):
 	await bot.add_cog(Tokens(bot))
