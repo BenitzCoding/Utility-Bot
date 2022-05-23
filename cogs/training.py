@@ -78,26 +78,26 @@ class Training(Cog):
 	@describe(user = "Who do you want to ban?")
 	@describe(reason = "Why do you want to take this moderation action towards them?")
 	@guilds(CORE_GUILD)
-	async def ban(self, ctx, user: str, reason: str):
+	async def ban(self, interaction, user: str, reason: str):
 		if "ban" in self.actions:
-			await ctx.send(f"{self.config.success} Banned {user} for `{reason}`")
+			await interaction.response.send_message(f"{self.config.success} Banned {user} for `{reason}`")
 			self.actions.pop("ban")
 
 		elif reason == None:
 			self.strikes.append("No valid reasoning.")
-			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
+			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, you always provide valid reasoning while moderating.")
 
 		else:
 			self.strikes.append("Wrong moderation action.")
-			await ctx.send(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
+			await interaction.response.send_message(f"{self.config.forbidden} Strike {len(self.strikes)}, that's not the right moderation action.")
 
 	@command(
 		name = "strikes",
 		description = "Shows the user's strikes."
 	)
 	@guilds(CORE_GUILD)
-	async def strikes(self, ctx):
-		await ctx.send(f"{len(self.strikes)} Strikes recorded.")
+	async def strikes(self, interaction):
+		await interaction.response.send_message(f"{len(self.strikes)} Strikes recorded.")
 
 async def setup(bot):
 	await bot.add_cog(Training(bot))
