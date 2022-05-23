@@ -15,7 +15,7 @@ from discord.ext.commands import Bot
 from functions import get_env, sync_application
 from utilities import utils, default
 
-CORE_GUILD = Object(id = utils.get_env("CORE_GUILD"))
+CORE_GUILD = Object(id = get_env("CORE_GUILD"))
 intents = Intents.all()
 
 class Senarc(Bot):
