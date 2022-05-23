@@ -5,16 +5,17 @@ from country_list import countries_for_language
 
 from discord import Embed
 from discord.ext.commands import GroupCog
-from discord.app_commands import command, describe
+from discord.app_commands import Choice, command, describe, autocomplete
 
 from functions import validate_user, get_env
 
 country_dict = dict(countries_for_language("en"))
-country_codes = [
-	country_code
-	for country_code, country_name in country_dict.items()
-]
-COUNTRY_CODES = Literal[tuple(country_codes)] # type: ignore
+
+def get_country_name(country_code):
+	return [
+		Choice(name=country_name, value=country_code)
+		for country_code, country_name in country_dict.items()
+	]
 
 class Tokens(
 	GroupCog,
@@ -65,7 +66,8 @@ class Tokens(
 		description = "Generate a new API Token."
 	)
 	@describe(country_code = "The country code of your internet connection.")
-	async def generate(self, interaction, country_code: COUNTRY_CODES):
+	@autocomplete(country_code = get_country_name())
+	async def generate(self, interaction, country: str):
 		if await validate_user(interaction.user.id):
 			return await interaction.send(":no_entry_sign: You already have an API token linked to your account.")
 
@@ -73,7 +75,7 @@ class Tokens(
 			data = {
 				"discord_id": interaction.user.id,
 				"username": interaction.user.name,
-				"country_code": country_code
+				"country_code": country
 			}
 			async with session.post(self.BASE_API, json = data, headers = self.HEADER_JSON) as response:
 				if response.status == 200:
