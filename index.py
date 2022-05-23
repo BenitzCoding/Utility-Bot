@@ -48,7 +48,7 @@ class Senarc(Bot):
 
 bot = Senarc(
 	command_prefix = "s!",
-	application_id = get_env("APPLICATION_ID"),
+	application_id = int(get_env("APPLICATION_ID")),
 	slash_commands = True,
 	intents = intents
 )
