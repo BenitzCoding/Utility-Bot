@@ -9,13 +9,12 @@ from discord.app_commands import command, describe
 
 from functions import validate_user, get_env
 
-def get_country_codes() -> Literal:
-	country_dict = dict(countries_for_language("en"))
-	country_codes = [
-		country_code
-		for country_code, country_name in country_dict.items()
-	]
-	return Literal[tuple(country_codes)] # type: ignore
+country_dict = dict(countries_for_language("en"))
+country_codes = [
+	country_code
+	for country_code, country_name in country_dict.items()
+]
+COUNTRY_CODES = Literal[tuple(country_codes)] # type: ignore
 
 class Tokens(
 	GroupCog,
@@ -66,7 +65,7 @@ class Tokens(
 		description = "Generate a new API Token."
 	)
 	@describe(country_code = "The country code of your internet connection.")
-	async def generate(self, interaction, country_code: get_country_codes):
+	async def generate(self, interaction, country_code: COUNTRY_CODES):
 		if await validate_user(interaction.user.id):
 			return await interaction.send(":no_entry_sign: You already have an API token linked to your account.")
 
