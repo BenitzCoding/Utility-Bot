@@ -3,7 +3,7 @@ import aiohttp
 from typing import Literal
 from country_list import countries_for_language
 
-from discordi import Embed
+from discord import Embed
 from discord.ext.commands import GroupCog
 from discord.app_commands import command, describe
 
