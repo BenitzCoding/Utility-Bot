@@ -7,7 +7,7 @@ from discord import Embed
 from discord.ext.commands import GroupCog
 from discord.app_commands import command, describe
 
-from functions.Token import validate_user, get_env
+from functions import validate_user, get_env
 
 def get_country_codes() -> Literal:
 	country_dict = dict(countries_for_language("en"))
