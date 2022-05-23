@@ -24,21 +24,10 @@ class Tokens(
 		}
 
 	async def get_country_name(self, interaction, current: str):
-		if current == "":
-			return [
-				Choice(name = name_, value = code_)
-				for code_, name_ in country_dict.items()
-			][:25]
-		elif len(current) == 1:
-			return [
-				Choice(name = name_, value = code_)
-				for code_, name_ in country_dict.items()
-				if code_.startswith(current)
-			][:25]
 		return [
 			Choice(name=country_name, value=country_code)
 			for country_code, country_name in country_dict.items() if current.lower() in country_name.lower() or current.lower() in country_code.lower()
-		]
+		][:25]
 
 	@command(
 		name = "firewall",
