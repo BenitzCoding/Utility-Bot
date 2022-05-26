@@ -13,7 +13,7 @@ class Events(Cog):
 			return
 		channel = await self.senarc.fetch_channel(886543799843688501)
 		embed = Embed(
-			timestamp = int(datetime.now().timestamp()),
+			timestamp = member.joined_at,
 			description = "Have a nice stay at **Senarc**. You should read <#886752366962040843> before getting started!",
 			colour = 0x90B4F8
 		)
